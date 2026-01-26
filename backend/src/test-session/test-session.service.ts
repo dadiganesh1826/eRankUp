@@ -35,9 +35,12 @@ export class TestSessionService implements OnModuleInit, OnModuleDestroy {
         private readonly examsService: ExamsService,
     ) {
         // Initializing Redis connection
+        // Initializing Redis connection
         this.redis = new Redis({
             host: this.configService.get('REDIS_HOST', 'localhost'),
             port: this.configService.get('REDIS_PORT', 6379),
+            password: this.configService.get('REDIS_PASSWORD'),
+            tls: this.configService.get('REDIS_SSL') === 'true' ? {} : undefined,
         });
     }
 
