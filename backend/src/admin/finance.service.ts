@@ -14,9 +14,12 @@ export class FinanceService {
         private purchaseRepository: Repository<Purchase>,
         private configService: ConfigService,
     ) {
+        const key_id = this.configService.get('RAZORPAY_KEY_ID') || 'rzp_test_dummy_id_12345';
+        const key_secret = this.configService.get('RAZORPAY_KEY_SECRET') || 'dummy_secret';
+
         this.razorpay = new Razorpay({
-            key_id: this.configService.get('RAZORPAY_KEY_ID'),
-            key_secret: this.configService.get('RAZORPAY_KEY_SECRET'),
+            key_id,
+            key_secret,
         });
     }
 
