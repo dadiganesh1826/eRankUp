@@ -5,7 +5,7 @@ const nextConfig = {
         return [
             {
                 source: '/api/:path*',
-                destination: process.env.API_URL || 'http://127.0.0.1:3001/:path*', // Proxy to Backend
+                destination: `${process.env.API_URL || 'http://127.0.0.1:3001'}/:path*`, // Proxy to Backend
             },
         ]
     },
