@@ -44,6 +44,9 @@ import { QualityModule } from './quality/quality.module';
                     autoLoadEntities: true,
                     synchronize: false,
                     ssl: config.get<string>('DB_SSL', 'false') === 'true' ? { rejectUnauthorized: false } : false,
+                    extra: {
+                        family: 4, // Force IPv4 to resolve ENETUNREACH issues
+                    },
                 };
                 console.log('DB Config:', { ...dbConfig, password: '***' });
                 return dbConfig;
