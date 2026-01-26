@@ -1,0 +1,17 @@
+{
+    "name": "erankup-monorepo",
+    "version": "0.0.1",
+    "private": true,
+    "workspaces": [
+        "backend",
+        "frontend",
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "test": "npm run test --workspaces"
+    },
+    "dependencies": {
+        "@google/generative-ai": "^0.24.1"
+    }
+}
