@@ -1,7 +1,6 @@
 import { Injectable, OnModuleInit, OnModuleDestroy, Inject, NotFoundException, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { ScorerService } from '../exams/scorer.service';

@@ -776,7 +776,7 @@ JSON:`;
             };
 
             // 4. Update Attempt
-            await this.attemptRepository.update(attemptId, { insights });
+            await this.attemptRepository.update(attemptId, { insights: insights as any });
             console.log(`[AIService] Generated and saved insights for attempt ${attemptId}`);
 
         } catch (error) {
