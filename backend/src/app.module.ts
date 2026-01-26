@@ -42,7 +42,7 @@ import { QualityModule } from './quality/quality.module';
                     database: config.get<string>('DB_NAME', 'erankup_db'),
                     // entities: [__dirname + '/**/*.entity{.ts,.js}'],
                     autoLoadEntities: true,
-                    synchronize: false,
+                    synchronize: config.get<string>('DB_SYNC', 'false') === 'true',
                     ssl: config.get<string>('DB_SSL', 'false') === 'true' ? { rejectUnauthorized: false } : false,
                     extra: {
                         family: 4, // Force IPv4 to resolve ENETUNREACH issues
