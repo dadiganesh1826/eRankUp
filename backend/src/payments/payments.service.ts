@@ -29,10 +29,18 @@ export class PaymentsService implements OnModuleInit {
     ) { }
 
     onModuleInit() {
-        this.razorpay = new Razorpay({
-            key_id: this.configService.get('RAZORPAY_KEY_ID', 'rzp_test_placeholder'),
-            key_secret: this.configService.get('RAZORPAY_KEY_SECRET', 'secret_placeholder'),
-        });
+        const key_id = this.configService.get('RAZORPAY_KEY_ID');
+        const key_secret = this.configService.get('RAZORPAY_KEY_SECRET');
+
+        if (key_id && key_id !== 'your_razorpay_key_id' && key_secret) {
+            this.razorpay = new Razorpay({
+                key_id,
+                key_secret,
+            });
+        } else {
+            console.warn('[PaymentsService] Razorpay credentials missing or invalid. Payments will operate in MOCK mode.');
+            this.razorpay = null;
+        }
     }
 
     async createOrder(user: User, examId: string, couponCode?: string) {
@@ -77,7 +85,7 @@ export class PaymentsService implements OnModuleInit {
         let rzpOrder;
         const keyId = this.configService.get('RAZORPAY_KEY_ID', 'rzp_test_placeholder');
 
-        if (keyId === 'rzp_test_placeholder' || keyId === 'test') {
+        if (keyId === 'rzp_test_placeholder' || keyId === 'test' || !this.razorpay) {
             console.log('[Payments] Mocking Razorpay order creation');
             rzpOrder = {
                 id: `order_mock_${Date.now()}`,
@@ -197,7 +205,7 @@ export class PaymentsService implements OnModuleInit {
         let rzpOrder;
         const keyId = this.configService.get('RAZORPAY_KEY_ID', 'rzp_test_placeholder');
 
-        if (keyId === 'rzp_test_placeholder' || keyId === 'test') {
+        if (keyId === 'rzp_test_placeholder' || keyId === 'test' || !this.razorpay) {
             rzpOrder = {
                 id: `order_mock_${Date.now()}`,
                 amount: options.amount,
