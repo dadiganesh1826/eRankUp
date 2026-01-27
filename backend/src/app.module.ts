@@ -44,7 +44,9 @@ import { DoubtsModule } from './doubts/doubts.module';
                     // entities: [__dirname + '/**/*.entity{.ts,.js}'],
                     autoLoadEntities: true,
                     synchronize: false,
-                    ssl: false,
+                    ssl: config.get<string>('DB_SSL') === 'true' || config.get<string>('NODE_ENV') === 'production'
+                        ? { rejectUnauthorized: false }
+                        : false,
                 };
                 console.log('DB Config:', { ...dbConfig, password: '***' });
                 return dbConfig;
