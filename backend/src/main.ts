@@ -33,22 +33,19 @@ async function bootstrap() {
     });
 
     // Logging middleware
-    const fs = require('fs');
-    const logFile = 'c:\\Users\\dadim\\OneDrive\\Desktop\\eRankUp\\backend\\debug.log';
     app.use((req, res, next) => {
         const start = Date.now();
         res.on('finish', () => {
             const duration = Date.now() - start;
-            const logMsg = `[${new Date().toISOString()}] ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)\n`;
-            console.log(logMsg.trim());
-            fs.appendFileSync(logFile, logMsg);
+            const logMsg = `[${new Date().toISOString()}] ${req.method} ${req.url} - ${res.statusCode} (${duration}ms)`;
+            console.log(logMsg);
         });
         next();
     });
 
-    await app.listen(3001, '0.0.0.0');
-    console.log(`Backend Application is running on: ${await app.getUrl()}`);
+    const port = process.env.PORT || 3001;
+    await app.listen(port, '0.0.0.0');
+    console.log(`Backend Application is running on port: ${port}`);
     console.log(`Allowed Origins: ${allowedOrigins.join(', ')}`);
 }
-// Trigger restart
 bootstrap();
