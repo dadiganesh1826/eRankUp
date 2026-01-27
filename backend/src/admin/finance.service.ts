@@ -14,10 +14,18 @@ export class FinanceService {
         private purchaseRepository: Repository<Purchase>,
         private configService: ConfigService,
     ) {
-        this.razorpay = new Razorpay({
-            key_id: this.configService.get('RAZORPAY_KEY_ID'),
-            key_secret: this.configService.get('RAZORPAY_KEY_SECRET'),
-        });
+        const key_id = this.configService.get('RAZORPAY_KEY_ID');
+        const key_secret = this.configService.get('RAZORPAY_KEY_SECRET');
+
+        if (key_id && key_id !== 'your_razorpay_key_id' && key_secret) {
+            this.razorpay = new Razorpay({
+                key_id,
+                key_secret,
+            });
+        } else {
+            console.warn('[FinanceService] Razorpay credentials missing or invalid. Payment features like refunds will be disabled.');
+            this.razorpay = null;
+        }
     }
 
     async getFinancialOverview() {
@@ -98,6 +106,9 @@ export class FinanceService {
         }
 
         try {
+            if (!this.razorpay) {
+                throw new Error('Payment gateway not initialized (check credentials)');
+            }
             // Initiate refund with Razorpay
             // Note: In a real scenario, you usually pass amount if partial refund, or speed (opt)
             const refund = await this.razorpay.payments.refund(paymentId, {
