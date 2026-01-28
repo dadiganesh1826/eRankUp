@@ -52,7 +52,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
         };
 
         const fs = require('fs');
-        const logFile = 'c:\\Users\\dadim\\OneDrive\\Desktop\\eRankUp\\backend\\debug.log';
         const logMsg = `[${new Date().toISOString()}] ${method} ${url} - ${status}: ${JSON.stringify(message)}\n`;
 
         if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
@@ -60,10 +59,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 `[${method}] ${url} - Error: ${JSON.stringify(message)}`,
                 (exception as Error).stack,
             );
-            fs.appendFileSync(logFile, logMsg + `${(exception as Error).stack}\n`);
+            if (process.env.NODE_ENV !== 'production') {
+                try {
+                    fs.appendFileSync('debug.log', logMsg + `${(exception as Error).stack}\n`);
+                } catch (e) { }
+            }
         } else {
             this.logger.warn(`[${method}] ${url} - Warning: ${JSON.stringify(message)}`);
-            fs.appendFileSync(logFile, logMsg);
+            if (process.env.NODE_ENV !== 'production') {
+                try {
+                    fs.appendFileSync('debug.log', logMsg);
+                } catch (e) { }
+            }
         }
 
         httpAdapter.reply(response, responseBody, status);
