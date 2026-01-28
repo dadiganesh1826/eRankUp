@@ -1,10 +1,11 @@
 import axios from 'axios';
 
 const isProd = process.env.NODE_ENV === 'production';
-const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+// Hardcoding your specific Render URL as a safety fallback
+const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://erankup.onrender.com';
 
 const api = axios.create({
-    baseURL: isProd ? `${backendUrl}` : '/api',
+    baseURL: isProd ? backendUrl : '/api',
     timeout: 300000, // 5 minutes for AI parsing tasks
     headers: {
         'Content-Type': 'application/json',
