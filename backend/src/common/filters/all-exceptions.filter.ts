@@ -7,6 +7,7 @@ import {
     Logger,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import * as fs from 'fs';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
@@ -51,7 +52,6 @@ export class AllExceptionsFilter implements ExceptionFilter {
             message: message,
         };
 
-        const fs = require('fs');
         const logMsg = `[${new Date().toISOString()}] ${method} ${url} - ${status}: ${JSON.stringify(message)}\n`;
 
         if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
