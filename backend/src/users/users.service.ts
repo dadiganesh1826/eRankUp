@@ -27,8 +27,16 @@ export class UsersService {
     }
 
     async create(userData: Partial<User>): Promise<User> {
-        const newUser = this.usersRepository.create(userData);
-        return this.usersRepository.save(newUser);
+        console.log('[UsersService] Creating user:', userData.email);
+        try {
+            const newUser = this.usersRepository.create(userData);
+            const savedUser = await this.usersRepository.save(newUser);
+            console.log('[UsersService] User created successfully:', savedUser.id);
+            return savedUser;
+        } catch (error) {
+            console.error('[UsersService] Failed to create user:', error);
+            throw error;
+        }
     }
 
     async findAll(): Promise<User[]> {
@@ -38,7 +46,15 @@ export class UsersService {
     }
 
     async updateProfile(id: string, updateData: Partial<User>): Promise<User | null> {
-        await this.usersRepository.update(id, updateData);
-        return this.usersRepository.findOne({ where: { id } });
+        console.log('[UsersService] Updating profile for user:', id);
+        try {
+            await this.usersRepository.update(id, updateData);
+            const updated = await this.usersRepository.findOne({ where: { id } });
+            console.log('[UsersService] Profile updated successfully');
+            return updated;
+        } catch (error) {
+            console.error('[UsersService] Failed to update profile:', error);
+            throw error;
+        }
     }
 }

@@ -56,9 +56,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
         if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
             this.logger.error(
-                `[${method}] ${url} - Error: ${JSON.stringify(message)}`,
+                `[${method}] ${url} - Error: ${message}`,
                 (exception as Error).stack,
             );
+            // Always log stack to console for production debugging (Render logs)
+            console.error('--- INTERNAL SERVER ERROR STACK ---');
+            console.error((exception as Error).stack);
+            console.error('-----------------------------------');
+
             if (process.env.NODE_ENV !== 'production') {
                 try {
                     fs.appendFileSync('debug.log', logMsg + `${(exception as Error).stack}\n`);
