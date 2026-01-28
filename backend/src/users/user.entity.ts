@@ -56,4 +56,10 @@ export class User {
 
     @Column({ nullable: true })
     phone: string;
+
+    @Column({ type: 'timestamp', nullable: true })
+    lastLoginAt: Date;
+
+    @Column({ nullable: true })
+    provider: string; // e.g., 'google', 'email'
 }

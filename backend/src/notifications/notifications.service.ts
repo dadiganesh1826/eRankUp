@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { NotificationTemplate } from './entities/notification-template.entity';
 import { Notification } from './entities/notification.entity';
 import { User } from '../users/user.entity';
@@ -24,7 +24,9 @@ export class NotificationsService {
         let usersToNotify: User[] = [];
 
         if (data.userIds && data.userIds.length > 0) {
-            usersToNotify = await this.userRepository.findByIds(data.userIds);
+            usersToNotify = await this.userRepository.find({
+                where: { id: In(data.userIds) }
+            });
         } else {
             const queryBuilder = this.userRepository.createQueryBuilder('user');
 
