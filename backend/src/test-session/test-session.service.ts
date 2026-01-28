@@ -41,6 +41,7 @@ export class TestSessionService implements OnModuleInit, OnModuleDestroy {
             port: this.configService.get('REDIS_PORT', 6379),
             password: this.configService.get('REDIS_PASSWORD'),
             tls: this.configService.get('REDIS_SSL') === 'true' ? {} : undefined,
+            maxRetriesPerRequest: null,
         });
     }
 
