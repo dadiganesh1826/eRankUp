@@ -28,9 +28,13 @@ export class AuthService {
         }
 
         const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+        const { phoneNumber, ...userData } = registerDto;
+
         const user = await this.usersService.create({
-            ...registerDto,
+            ...userData,
+            phone: phoneNumber,
             password: hashedPassword,
+            provider: 'email',
         });
 
         // Don't return the password
@@ -73,6 +77,9 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
+        // Update last login
+        await this.usersService.updateProfile(user.id, { lastLoginAt: new Date() });
+
         const payload = { sub: user.id, email: user.email, role: user.role };
         return {
             access_token: this.jwtService.sign(payload),
@@ -112,7 +119,12 @@ export class AuthService {
                 email,
                 fullName,
                 password: '', // Placeholder since they login via Google
+                provider: 'google',
+                lastLoginAt: new Date(),
             });
+        } else {
+            // Update last login for existing user
+            await this.usersService.updateProfile(user.id, { lastLoginAt: new Date() });
         }
 
         const payload = { sub: user.id, email: user.email, role: user.role };
